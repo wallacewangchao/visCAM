@@ -27,7 +27,8 @@
     </div>
     <div class="col-4 bg-secondary">
       <div class="col-12">
-        class <input size="1" value="849" onchange="makeModel(this.value); classify();">
+        <!-- class <input size="1" id = "user_input" value="849" onchange="makeModel(this.value); classify();"> -->
+        class <input size="1" id = "user_input" value="849" ">
         <input type="checkbox" onclick="chkMax = checked; classify();" checked="">actMax
         <input size="1" value="34" onchange="actMax=parseFloat(this.value); classify();">
       </div>
@@ -41,8 +42,14 @@
         <br>0.050 - 310 - ant, emmet, pismire
         <br>0.029 - 723 - pinwheel
       </div>
+      <br>
+      click to see the class activation map of:
       <div class="col-12">
-        <button class="btn btn-block btn-outline-light">teapot</button>
+        <br>
+        <button class="btn btn-block btn-outline-light" id='btn_1st_prob' value = "" 
+                      onclick="makeModel(this.value); classify();"></button>
+        <button class="btn btn-block btn-outline-light" id='btn_2st_prob' value = "" 
+                      onclick="makeModel(this.value); classify();"></button>
         <button class="btn btn-block btn-outline-light">teapot</button>
         <button class="btn btn-block btn-outline-light">teapot</button>
       </div>
@@ -69,7 +76,7 @@
 <script>
 'use strict';
 const inpMin = -1, inpMax = 1, normConst = (inpMax - inpMin)/255.0;
-const IMAGE_SIZE = 224, topK = 3;
+const IMAGE_SIZE = 224, topK = 5;
 
 const cnv = document.getElementById("imgcnv")
 const ctx = cnv.getContext("2d")
@@ -218,6 +225,12 @@ async function classify() {
     str += "\n" + predictions[i].probability.toFixed(3) + " - " + predictions[i].classInd +
       " - " + predictions[i].className;
   document.getElementById('output').innerText = str;
+  
+  let str_1st_prob = predictions[0].className + " - " + predictions[0].probability.toFixed(3) * 100 + "%";
+  document.querySelector('#btn_1st_prob').textContent = str_1st_prob;
+  document.querySelector('#btn_1st_prob').value = predictions[0].classInd;
+  document.querySelector('#user_input').value = predictions[0].classInd;
+  console.log(str_1st_prob);
 
   const basePredict = baseModel.predict(batched);
   const predicted = model.predict(basePredict);
