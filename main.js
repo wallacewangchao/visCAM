@@ -1,6 +1,6 @@
 'use strict';
 const inpMin = -1, inpMax = 1, normConst = (inpMax - inpMin)/255.0;
-const IMAGE_SIZE = 224, topK = 5;
+const IMAGE_SIZE = 224, topK = 3;
 
 const cnv = document.getElementById("imgcnv")
 const ctx = cnv.getContext("2d")
@@ -10,6 +10,10 @@ const out_cnv = document.getElementById("outcnv")
 const out_ctx = out_cnv.getContext('2d')
 const out_cnv2 = document.getElementById("outcnv2")
 const out_ctx2 = out_cnv2.getContext('2d')
+
+const radio_btns = document.getElementsByName('options');
+const radio_btn_labels = document.getElementsByName('prediction_labels');
+
 var scale,  isMouseDown = false,  iter = 200,
     xMin, yMin, xMax, yMax
 var model, baseModel, mobilenet, img, actMax = 36., chkMax = true,
@@ -20,7 +24,14 @@ rect_cnv.addEventListener('mousedown', start_drag, false);
 window.addEventListener('mouseup', stop_drag, false);
 window.addEventListener("paste", pasteHandler);
 
-
+function change_label_Selcetion(){
+  for (let i=0; i < radio_btns.length; i ++){
+    if (radio_btns[i].checked){
+      makeModel(radio_btns[i].value);
+    }
+  }
+  classify();
+}
 
 //paste handler
 function pasteHandler(e){
@@ -51,7 +62,6 @@ function paste_createImage(source){
     }
     img.src = source;
 }
-
 
 function drag(ev){
   if (!isMouseDown) return
@@ -87,25 +97,6 @@ function getXY(ev){
   var rect = cnv.getBoundingClientRect()
   return [ev.clientX - rect.left, ev.clientY - rect.top]
 }
-
-// document.addEventListener('keyup', (e) => {
-//   if(e.ctrlKey) return;
-//   const d = e.shiftKey ? 10 : 1;
-//   switch (e.code) {
-//     case 'KeyJ': xMax -= d; break;
-//     case 'KeyL': xMax += d; break;
-//     case 'KeyI': yMax -= d; break;
-//     case 'KeyK': yMax += d; break;
-//     case 'KeyA': xMax -= d; xMin -= d; break;
-//     case 'KeyD': xMax += d; xMin += d; break;
-//     case 'KeyW': yMax -= d; yMin -= d; break;
-//     case 'KeyS': yMax += d; yMin += d; break;
-//     default: return;
-//   }
-//   rect_ctx.clearRect(0,0, cnv.width, cnv.height);
-//   rect_ctx.strokeRect(xMin,yMin, xMax-xMin,yMax-yMin);
-//   rect();
-// });
 
 async function loadLayersModel(modelUrl) {
   let ti = performance.now();
@@ -153,17 +144,15 @@ async function classify() {
   //     " - " + predictions[i].className;
   document.getElementById('output').innerText = str;
   
-  //buttons for classify objects
-  let str_1st_prob = predictions[0].className + " - " + predictions[0].probability.toFixed(3) * 100 + "%" +
-                    " - " + predictions[0].classInd;
-  document.getElementById('btn_1st_prob').textContent = str_1st_prob;
-  document.getElementById('btn_1st_prob').value = predictions[0].classInd;
+  //toggle buttons for classify objects
+  for(let i = 0; i < radio_btns.length; i++) {
+    radio_btns[i].value = predictions[i].classInd;
+    radio_btn_labels[i].innerText = predictions[i].className + " - " + predictions[i].probability.toFixed(3) * 100 + "%";
+  }
+
   document.getElementById('user_input').innerText = predictions[0].className;
-  
-  //buttons for classify objects
-  let str_2st_prob = predictions[1].className + " - " + predictions[1].probability.toFixed(3) * 100 + "%";
-  document.getElementById('btn_2st_prob').textContent = str_2st_prob;
-  document.getElementById('btn_2st_prob').value = predictions[1].classInd;
+
+  //
 
   const basePredict = baseModel.predict(batched);
   const predicted = model.predict(basePredict);

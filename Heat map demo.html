@@ -38,35 +38,27 @@
       </div>
       <div class="col-12" id="output">
         probability / class / name 
-        <br>0.876 - 985 - daisy
-        <br>0.050 - 310 - ant, emmet, pismire
-        <br>0.029 - 723 - pinwheel
       </div>
       <br>
       click to see the class activation map of:
       <div class="col-12">
         <br>
-        <button class="btn btn-block btn-outline-dark" id='btn_1st_prob' 
-                 value = "" 
-                 onclick="makeModel(this.value); 
-                 classify();"></button>
-        <button class="btn btn-block btn-outline-dark" id='btn_2st_prob' value = "" 
-                      onclick="makeModel(this.value); classify();"></button>
-        <button class="btn btn-block btn-outline-dark">teapot</button>
-      </div>
-
-      <div class="col-12">
-        <br>
-
-        <div class="btn-group-toggle btn-group-vertical" data-toggle="buttons">
-          <label class="btn btn-outline-secondary active">
-            <input type="radio" name="options" id="option1" checked> Radio 1 (preselected)
+        <div class="btn-group-toggle btn-group-vertical btn-block" 
+             data-toggle="buttons"
+             id = "toggle_btns"
+             onchange="change_label_Selcetion();">
+          <label class="btn btn-outline-secondary active" name = "labels">
+            <input type="radio" name="options" id="option1" checked >
+            <div name="prediction_labels">prediction 1</div>
           </label>
-          <label class="btn btn-outline-secondary">
-            <input type="radio" name="options" id="option2"> Radio 2
+          <label class="btn btn-outline-secondary" name = "labels">
+            <input type="radio" name="options" id="option2"> 
+            <div name="prediction_labels">prediction 1</div>
           </label>
-          <label class="btn btn-outline-secondary">
-            <input type="radio" name="options" id="option3"> Radio 3
+          <label class="btn btn-outline-secondary" name = "labels">
+            <input type="radio" name="options" id="option3"> 
+            <div name="prediction_labels">prediction 1</div>
+
           </label>
         </div>
       </div>
@@ -138,4 +130,9 @@ global_average_pooling2d_1   [null,1024]
 &nbsp; &nbsp; <i>updated</i> 11 Jan 2020 -->
 
 
-<iframe frameborder="0" scrolling="no" style="background-color: transparent; border: 0px; display: none;" src="./Heat map demo_files/saved_resource.html"></iframe><div id="GOOGLE_INPUT_CHEXT_FLAG" input="" input_stat="{&quot;tlang&quot;:true,&quot;tsbc&quot;:true,&quot;pun&quot;:true,&quot;mk&quot;:true,&quot;ss&quot;:true}" style="display: none;"></div></body></html>
+<iframe frameborder="0" scrolling="no" style="background-color: transparent; border: 0px; display: none;" src="./Heat map demo_files/saved_resource.html">
+</iframe>
+<div id="GOOGLE_INPUT_CHEXT_FLAG" input="" input_stat="{&quot;tlang&quot;:true,&quot;tsbc&quot;:true,&quot;pun&quot;:true,&quot;mk&quot;:true,&quot;ss&quot;:true}" style="display: none;">
+</div>
+</body>
+</html>
