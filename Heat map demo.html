@@ -8,8 +8,11 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>    
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    
     <style type="text/css">
       H1{ font-size: 120%; color: green}
       H2{ font-size: 100%; color: green}
@@ -26,6 +29,7 @@
     </div>
     <div class="col-4 bg-white">
       <div class="col-12">
+        <input size="1" value="985" onchange="makeModel(this.value); classify();">
         <!-- class <input size="1" id = "user_input" value="849" onchange="makeModel(this.value); classify();"> -->
         visualise class: <div id = "user_input" value="849">333</div>
         <!-- class <input size="1" id = "user_input" value="849" "> -->
@@ -33,6 +37,7 @@
         <input size="1" value="34" onchange="actMax=parseFloat(this.value); classify();">
       </div>
       <div class="col-12">
+        <canvas id="outcnv3" style="border:1px solid greenyellow; position: absolute;" width="224" height="224"></canvas>
         <canvas id="outcnv2" style="border:1px solid greenyellow; position: absolute;" width="224" height="224"></canvas>
         <canvas id="outcnv" style="border:1px solid grey;" width="224" height="224"></canvas>
       </div>
@@ -40,7 +45,7 @@
         probability / class / name 
       </div>
       <br>
-      click to see the class activation map of:
+      <h3>Why I think it is a:</h3>
       <div class="col-12">
         <br>
         <div class="btn-group-toggle btn-group-vertical btn-block" 
@@ -58,9 +63,23 @@
           <label class="btn btn-outline-secondary" name = "labels">
             <input type="radio" name="options" id="option3"> 
             <div name="prediction_labels">prediction 1</div>
-
           </label>
         </div>
+
+        <br>
+
+      </div>
+      <div class="col-12">
+        <!-- <select class="selectpicker" data-show-subtext="true" data-live-search="true">
+          <option data-subtext="Rep California">Tom Foolery</option>
+          <option data-subtext="Sen California">Bill Gordon</option>
+          <option data-subtext="Sen Massacusetts">Elizabeth Warren</option>
+          <option data-subtext="Rep Alabama">Mario Flores</option>
+          <option data-subtext="Rep Alaska">Don Young</option>
+          <option data-subtext="Rep California" disabled="disabled">Marvin Martinez</option>
+        </select> -->
+        <select class="selectpicker" id="dropdown_labels" data-show-subtext="true" data-live-search="true" data-width="fit">
+        </select>
       </div>
 
       <script src="main.js"></script>

@@ -10,9 +10,12 @@ const out_cnv = document.getElementById("outcnv")
 const out_ctx = out_cnv.getContext('2d')
 const out_cnv2 = document.getElementById("outcnv2")
 const out_ctx2 = out_cnv2.getContext('2d')
+const out_cnv3 = document.getElementById("outcnv3")
+const out_ctx3 = out_cnv3.getContext('2d')
 
 const radio_btns = document.getElementsByName('options');
 const radio_btn_labels = document.getElementsByName('prediction_labels');
+let select = document.getElementById('dropdown_labels');
 
 var scale,  isMouseDown = false,  iter = 200,
     xMin, yMin, xMax, yMax
@@ -23,6 +26,13 @@ rect_cnv.addEventListener('mousemove', drag, false);
 rect_cnv.addEventListener('mousedown', start_drag, false);
 window.addEventListener('mouseup', stop_drag, false);
 window.addEventListener("paste", pasteHandler);
+
+for (let value of Object.values(IMAGENET_CLASSES)) {
+  let option = document.createElement('option');
+  // console.log(option);
+  option.text = value;
+  select.appendChild(option);
+}
 
 function change_label_Selcetion(){
   for (let i=0; i < radio_btns.length; i ++){
@@ -147,12 +157,10 @@ async function classify() {
   //toggle buttons for classify objects
   for(let i = 0; i < radio_btns.length; i++) {
     radio_btns[i].value = predictions[i].classInd;
-    radio_btn_labels[i].innerText = predictions[i].className + " - " + predictions[i].probability.toFixed(3) * 100 + "%";
+    radio_btn_labels[i].innerText = predictions[i].className + " - " + (predictions[i].probability * 100).toFixed(1) + "%";
   }
 
   document.getElementById('user_input').innerText = predictions[0].className;
-
-  //
 
   const basePredict = baseModel.predict(batched);
   const predicted = model.predict(basePredict);
@@ -166,16 +174,34 @@ async function classify() {
     if(ma < di)  ma = di;
   }
   console.log("max= " + ma.toFixed(2) + ", av= " + (sum/49).toFixed(2));
-  const imgData = out_ctx2.createImageData(7, 7);
-  let t = 0;
   if(chkMax) ma = actMax;
-  for(let i = 0; i < 7; i++ ){
-    for(let j = 0; j < 7; j++, t++ )
-      imgData.data[t*4 + 3] = Math.max(255*(1 - Math.exp(0.1*(data[t] - ma))), 0);
+
+
+  // const imgData = out_ctx2.createImageData(7, 7);
+  // let t = 0;
+  // for(let i = 0; i < 7; i++ ){
+  //   for(let j = 0; j < 7; j++, t++ ){
+  //     imgData.data[t*4 + 3] = Math.max(255*(1 - Math.exp(0.1*(-data[t] + ma))), 0);
+  //     console.log( Math.max((1 - Math.exp(0.1*(-data[t] + ma))), 0) );
+  //   }
+  // }
+  // const imageBitmap = await createImageBitmap(imgData);
+  // out_ctx2.clearRect(0,0, 224,224);
+  // out_ctx2.drawImage(imageBitmap, 0,0, 224,224);
+
+  // Draw the ellipse
+  let k = 0;
+  out_ctx3.clearRect(0,0, 224,224);
+  for(let i=0; i < 7; i++){
+    for (let j=0; j < 7; j++, k++){
+      out_ctx3.beginPath();
+      out_ctx3.ellipse(16 + [j]*32, 16 + [i] *32, 16, 16, 0, 0, 2 * Math.PI);
+      let alpha = Math.max((1 - Math.exp(0.035*(-data[k] + ma))), 0);
+      out_ctx3.fillStyle = 'rgba(255, 0, 0,' + alpha + ')';
+      out_ctx3.fill();
+    }
   }
-  const imageBitmap = await createImageBitmap(imgData);
-  out_ctx2.clearRect(0,0, 224,224);
-  out_ctx2.drawImage(imageBitmap, 0,0, 224,224);
+
 }
 
 const init = async () => {
