@@ -23,8 +23,10 @@
       
       .container .col-8{
         padding: 0;
-        max-height: 75%;
-        min-height: auto;
+        height: 100%;
+        /* min-height: auto; */
+        /* background-color: wheat; */
+        /* box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.15); */
       }
 
       .container .col-4{
@@ -41,7 +43,7 @@
       <p class="font-weight-light">Press “control + v” to paste a image link</p>
     </div>
   </div>
-  <div class="row h-75">
+  <div class="row h-50" id="main_content_row">
 
 
     <div class="col-4">
@@ -87,11 +89,11 @@
       </div>
     </div>
 
-    <div class="col-8">
+    <div class="col-8" id="image_col">
         <canvas id="rectcnv" style="border:1px solid white; position: absolute;"></canvas>
-        <canvas id="imgcnv" contenteditable="" style="border:1px solid grey; box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.15);"></canvas>
+        <canvas id="imgcnv" contenteditable="" style="border:1px solid grey; box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.15);
+        "></canvas>
     </div>
-
 
   </div>
 </div>

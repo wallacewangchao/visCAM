@@ -7,6 +7,8 @@ const ctx = cnv.getContext("2d")
 const rect_cnv = document.getElementById("rectcnv")
 const rect_ctx = rect_cnv.getContext("2d")
 
+let image_col = document.getElementById("image_col")
+
 const out_cnv = document.getElementById("outcnv")
 const out_ctx = out_cnv.getContext('2d')
 const out_cnv2 = document.getElementById("outcnv2")
@@ -28,14 +30,19 @@ rect_cnv.addEventListener('mousedown', start_drag, false);
 window.addEventListener('mouseup', stop_drag, false);
 window.addEventListener("paste", pasteHandler);
 
-fitToContainer(rect_cnv);
-fitToContainer(cnv);
-function fitToContainer(canvas){
-  canvas.style.width='100%';
-  canvas.style.height='100%';
-  canvas.width  = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
-}
+// fitToContainer(rect_cnv);
+// fitToContainer(cnv);
+// function fitToContainer(canvas){
+//   canvas.style.width='100%';
+//   canvas.style.height='100%';
+//   canvas.width  = canvas.offsetWidth;
+//   canvas.height = canvas.offsetHeight;
+// }
+
+// function fitToImage(canvas,img_width, img_height){
+//   canvas.width = img_width;
+//   canvas.height = img_height;
+// }
 
 for (let value of Object.values(IMAGENET_CLASSES)) {
   let option = document.createElement('option');
@@ -70,15 +77,31 @@ function pasteHandler(e){
 function paste_createImage(source){
     img = new Image();
     img.onload = function(){
-        scale = Math.min(cnv.clientWidth / img.width, cnv.clientHeight / img.height);
+        console.log('image_col.clientHeight : '+ image_col.clientHeight );
+        let canvas_height = image_col.clientHeight;
+        let canvas_width = image_col.clientWidth;
+
+        // scale = Math.min(cnv.clientWidth / img.width, cnv.clientHeight / img.height);
+        scale = image_col.clientHeight / img.height;
+
+        rect_cnv.height = cnv.height = canvas_height;
+        rect_cnv.width = cnv.width = img.width*scale;
+
+        // scale = image_col.height / img.height;
+        // cnv.height = image_col.height;
+        // cnv.width = image_col.width*scale;
+
         ctx.clearRect(0,0, cnv.width, cnv.height);
         ctx.drawImage(img, 0,0, scale*img.width, scale*img.height);
+
         console.log("image size "+ img.width +" "+ img.height);
         rect_ctx.clearRect(0,0, cnv.width, cnv.height);
         xMin = yMin = 0;
         xMax = (img.width - 1)*scale;  yMax = (img.height - 1)*scale;
         rect();
         rect_ctx.strokeRect(xMin,yMin, xMax-xMin,yMax-yMin);
+        // fitToImage(rect_cnv, xMax, yMax);
+        // fitToImage(cnv,xMax,yMax);
     }
     img.src = source;
 }
