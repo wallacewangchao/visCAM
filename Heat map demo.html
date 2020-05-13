@@ -16,22 +16,40 @@
     <style type="text/css">
       H1{ font-size: 120%; color: green}
       H2{ font-size: 100%; color: green}
+
+      body{
+        background-color:rgb(251,251,251);
+      }
+      
+      .container .col-8{
+        padding: 0;
+        background-color: #FFFFFF;
+        height: 75%;
+        box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.15);
+        border-radius: 15px 0px 0px 15px;
+      }
+
+      .container .col-4{
+        padding: 0;
+      }
+
     </style>
   </head>
 <body data-gr-c-s-loaded="true">
-<h1>Interactive Heat map demo</h1>
-
 <div class="container">
-  <div class="row">
-    <div class="col-8 bg-light">
-      <canvas id="rectcnv" style="border:1px solid grey; position: absolute;" width="500" height="400"></canvas>
-      <canvas id="imgcnv" contenteditable="" style="border:1px solid grey;" width="500" height="400"></canvas>
+  <div class="row h-25 align-items-end">
+    <div class="col-12 text-left">
+      <p class="font-weight-light display-3">Let me see, this is...</p>
+      <p class="font-weight-light">Press “control + v” to paste a image link</p>
     </div>
-    <div class="col-4 bg-white">
+  </div>
+  <div class="row h-75">
+
+
+    <div class="col-4">
       <div class="col-12">
-        <input size="1" value="985" onchange="makeModel(this.value); classify();">
         <!-- class <input size="1" id = "user_input" value="849" onchange="makeModel(this.value); classify();"> -->
-        visualise class: <div id = "user_input" value="849">333</div>
+        <div id = "user_input" value="849"></div>
         <!-- class <input size="1" id = "user_input" value="849" "> -->
         <input type="checkbox" onclick="chkMax = checked; classify();" checked="">actMax
         <input size="1" value="34" onchange="actMax=parseFloat(this.value); classify();">
@@ -44,8 +62,6 @@
       <div class="col-12" id="output">
         probability / class / name 
       </div>
-      <br>
-      <h3>Why I think it is a:</h3>
       <div class="col-12">
         <br>
         <div class="btn-group-toggle btn-group-vertical btn-block" 
@@ -65,27 +81,23 @@
             <div name="prediction_labels">prediction 1</div>
           </label>
         </div>
-
         <br>
-
+        <div class="col-12">
+          <select class="selectpicker" id="dropdown_labels" data-show-subtext="true" data-live-search="true" data-width="fit">
+          </select>
+        </div>
       </div>
-      <div class="col-12">
-        <!-- <select class="selectpicker" data-show-subtext="true" data-live-search="true">
-          <option data-subtext="Rep California">Tom Foolery</option>
-          <option data-subtext="Sen California">Bill Gordon</option>
-          <option data-subtext="Sen Massacusetts">Elizabeth Warren</option>
-          <option data-subtext="Rep Alabama">Mario Flores</option>
-          <option data-subtext="Rep Alaska">Don Young</option>
-          <option data-subtext="Rep California" disabled="disabled">Marvin Martinez</option>
-        </select> -->
-        <select class="selectpicker" id="dropdown_labels" data-show-subtext="true" data-live-search="true" data-width="fit">
-        </select>
-      </div>
-
-      <script src="main.js"></script>
     </div>
+
+    <div class="col-8">
+      <canvas id="rectcnv" style="border:1px solid white; position: absolute;"></canvas>
+      <canvas id="imgcnv" contenteditable="" style="border:1px solid grey;"></canvas>
+    </div>
+
+
   </div>
 </div>
+<script src="main.js"></script>
 
 <!-- <table><tbody><tr><td>
   <div>

@@ -6,6 +6,7 @@ const cnv = document.getElementById("imgcnv")
 const ctx = cnv.getContext("2d")
 const rect_cnv = document.getElementById("rectcnv")
 const rect_ctx = rect_cnv.getContext("2d")
+
 const out_cnv = document.getElementById("outcnv")
 const out_ctx = out_cnv.getContext('2d')
 const out_cnv2 = document.getElementById("outcnv2")
@@ -26,6 +27,15 @@ rect_cnv.addEventListener('mousemove', drag, false);
 rect_cnv.addEventListener('mousedown', start_drag, false);
 window.addEventListener('mouseup', stop_drag, false);
 window.addEventListener("paste", pasteHandler);
+
+fitToContainer(rect_cnv);
+fitToContainer(cnv);
+function fitToContainer(canvas){
+  canvas.style.width='100%';
+  canvas.style.height='100%';
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
 
 for (let value of Object.values(IMAGENET_CLASSES)) {
   let option = document.createElement('option');
