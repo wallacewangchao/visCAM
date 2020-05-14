@@ -25,6 +25,11 @@ var scale,  isMouseDown = false,  iter = 200,
 var model, baseModel, mobilenet, img, actMax = 36., chkMax = true,
   index = 849, weightsPred, modelReady = false;
 
+let act_data;
+let act_average;
+let act_max;
+let set_act_max = 36; 
+
 rect_cnv.addEventListener('mousemove', drag, false);
 rect_cnv.addEventListener('mousedown', start_drag, false);
 window.addEventListener('mouseup', stop_drag, false);
@@ -193,49 +198,64 @@ async function classify() {
     radio_btn_labels[i].innerText = predictions[i].className + " - " + (predictions[i].probability * 100).toFixed(1) + "%";
   }
 
-  document.getElementById('user_input').innerText = predictions[0].className;
+  // document.getElementById('user_input').innerText = predictions[0].className;
 
   const basePredict = baseModel.predict(batched);
   const predicted = model.predict(basePredict);
-  const data = predicted.dataSync();
+  // const data = predicted.dataSync();
+  act_data = predicted.dataSync();
+
   basePredict.dispose();
   predicted.dispose();
-  let ma = data[0], sum = ma;
+  let ma = act_data[0], sum = ma;
+  // cacluate the max activation and average activation 
   for(let i = 1; i < 49; i++ ){
-    let di = data[i];
+    let di = act_data[i];
     sum += di;
+
+    // cacluate the max activation
     if(ma < di)  ma = di;
   }
-  console.log("max= " + ma.toFixed(2) + ", av= " + (sum/49).toFixed(2));
-  if(chkMax) ma = actMax;
+  act_max = ma;
+  act_average = sum/49;
+  console.log("max= " + act_max.toFixed(2) + ", av= " + act_average.toFixed(2));
 
+  // if(chkMax) act_max = actMax;
 
+  // old visualisation with black cover
   // const imgData = out_ctx2.createImageData(7, 7);
   // let t = 0;
   // for(let i = 0; i < 7; i++ ){
   //   for(let j = 0; j < 7; j++, t++ ){
-  //     imgData.data[t*4 + 3] = Math.max(255*(1 - Math.exp(0.1*(-data[t] + ma))), 0);
-  //     console.log( Math.max((1 - Math.exp(0.1*(-data[t] + ma))), 0) );
+  //     imgData.data[t*4 + 3] = Math.max(255*(1 - Math.exp(0.1*(-act_data[t] + ma))), 0);
+  //     console.log( Math.max((1 - Math.exp(0.1*(-act_data[t] + ma))), 0) );
   //   }
   // }
   // const imageBitmap = await createImageBitmap(imgData);
   // out_ctx2.clearRect(0,0, 224,224);
   // out_ctx2.drawImage(imageBitmap, 0,0, 224,224);
 
-  // Draw the ellipse
+  // new visualisation with reddots
+  drawDots();
+}
+
+function drawDots(){
+  // if(chkMax) act_max = set_act_max;
   let k = 0;
   out_ctx3.clearRect(0,0, 224,224);
   for(let i=0; i < 7; i++){
     for (let j=0; j < 7; j++, k++){
       out_ctx3.beginPath();
       out_ctx3.ellipse(16 + [j]*32, 16 + [i] *32, 16, 16, 0, 0, 2 * Math.PI);
-      let alpha = Math.max((1 - Math.exp(0.035*(-data[k] + ma))), 0);
+      let alpha = Math.max((1 - Math.exp(0.035*(-act_data[k] + set_act_max))), 0);
       out_ctx3.fillStyle = 'rgba(255, 0, 0,' + alpha + ')';
       out_ctx3.fill();
     }
   }
 
+  console.log("set_act_max: " + set_act_max);
 }
+
 
 const init = async () => {
   await loadLayersModel('https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_1.0_224/model.json');

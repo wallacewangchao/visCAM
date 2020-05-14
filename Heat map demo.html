@@ -24,13 +24,58 @@
       .container .col-8{
         padding: 0;
         height: 100%;
-        /* min-height: auto; */
-        /* background-color: wheat; */
-        /* box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.15); */
       }
 
       .container .col-4{
         padding: 0;
+      }
+
+      .container .row .col-4 .col-12 > canvas {
+        border-radius: 0px 25px 26px 29px;
+      }
+
+      #outcnv{
+        box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.15);
+        border:1px solid rgb(202, 202, 202);
+      }
+
+      .slider {
+        -webkit-appearance: none;
+        width: 224px;
+        height: 15px;
+        border-radius: 5px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+      }
+
+      .slider:hover {
+        opacity: 1;
+      }
+
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: rgb(101, 170, 103);
+        cursor: pointer;
+      }
+
+      .slider::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4CAF50;
+        cursor: pointer;
+      }
+
+      #toggle_btns{
+
+        width: 224px;
       }
 
     </style>
@@ -45,20 +90,21 @@
   </div>
   <div class="row h-50" id="main_content_row">
 
-
+    <!-- here is the control column -->
     <div class="col-4">
       <div class="col-12">
-        <!-- class <input size="1" id = "user_input" value="849" onchange="makeModel(this.value); classify();"> -->
-        <div id = "user_input" value="849"></div>
-        <!-- class <input size="1" id = "user_input" value="849" "> -->
-        <input type="checkbox" onclick="chkMax = checked; classify();" checked="">actMax
-        <input size="1" value="34" onchange="actMax=parseFloat(this.value); classify();">
+        <canvas id="outcnv3" style="position: absolute;" width="224" height="224"></canvas>
+        <canvas id="outcnv2" style="position: absolute;" width="224" height="224"></canvas>
+        <canvas id="outcnv"  width="224" height="224"></canvas>
       </div>
       <div class="col-12">
-        <canvas id="outcnv3" style="border:1px solid greenyellow; position: absolute;" width="224" height="224"></canvas>
-        <canvas id="outcnv2" style="border:1px solid greenyellow; position: absolute;" width="224" height="224"></canvas>
-        <canvas id="outcnv" style="border:1px solid grey;" width="224" height="224"></canvas>
+        <br>
+        <input type="range" id="slider_actMax" class="slider" min="0" max="50" value="34"  width="224" oninput="set_act_max=parseFloat(this.value); drawDots();">
+        <br>
+
       </div>
+      <br>
+
       <div class="col-12" id="output">
         probability / class / name 
       </div>
@@ -89,6 +135,7 @@
       </div>
     </div>
 
+    <!-- here is the picture past column -->
     <div class="col-8" id="image_col">
         <canvas id="rectcnv" style="border:1px solid white; position: absolute;"></canvas>
         <canvas id="imgcnv" contenteditable="" style="border:1px solid grey; box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.15);
@@ -98,68 +145,6 @@
   </div>
 </div>
 <script src="main.js"></script>
-
-<!-- <table><tbody><tr><td>
-  <div>
-    <canvas id="rectcnv" style="border:1px solid grey; position: absolute;" width="500" height="400"></canvas>
-    <canvas id="imgcnv" contenteditable="" style="border:1px solid grey;" width="500" height="400"></canvas>
-  </div>
-</td><td valign="top">
-  class <input size="1" value="985" onchange="makeModel(this.value); classify();">
-  <input type="checkbox" onclick="chkMax = checked; classify();" checked="">actMax
-  <input size="1" value="34" onchange="actMax=parseFloat(this.value); classify();">
-  <div>
-    <canvas id="outcnv2" style="border:1px solid grey; position: absolute;" width="224" height="224"></canvas>
-    <canvas id="outcnv" style="border:1px solid grey;" width="224" height="224"></canvas>
-  </div>
-<div id="output">probability / class / name<br>0.876 - 985 - daisy<br>0.050 - 310 - ant, emmet, pismire<br>0.029 - 723 - pinwheel</div>
-</td></tr></tbody></table> -->
-
-<!-- Drag mouse (from the top to the right) to mark a new region for inference.
-Use the A,S,D,W keys to translate and J,K,L,I to enlarge bounding box (hold the Shift key
-to move x10 faster). This region from the source image (see its position,
-width and height in console) is scaled into 224x224 image and is shown to the right.
-Open a new browser window (or tab) and Copy / Paste(Ctrl+V) images from
- <a href="https://image.google.com/">image.google.com</a>,
- <a href="https://unsplash.com/s/photos/cat">unsplash.com</a>, ... 
-
-<p>This application shows which areas of the image contribute
- the most to the "daisy" prediction.
-The brightness of the image is proportional to exp(0.1 (Aij - max)),
- where Aij - activations in the "daisy" class on 7x7 grid
-(see the Aij maximum and average values in console),
- max - is the maximum Aij value or is equal to "actMax" (if checked).
-You can set new Heat map Class and actMax values.
-
-</p><p>Unfortunately it is not clear what features give activations.
-
- </p><h2>Class Activation Mapping and CNN surgery</h2>
-
- As you can see below ("mobilenet.summary()" is used),
- the 1024-features map (or embeddings or activations)
- of the MobileNet_v1_1.0_224 is made by the Global Average Pooling (GAP) over
- the 7�7 space grid of the preceding [7,7,1024]-features map.
- <br>See also <a href="https://www.ibiblio.org/e-notes/ml/quant/weights.htm">MobileNet v1 Layers model analysis</a> or
- You can use e.g. "JSON Viewer Awesome" Chrome extension to explore
- <a href="https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_1.0_224/model.json">model.json</a>
- file.
-
-<pre>conv_pw_13_relu              [null,7,7,1024]
-____________________________________________
-global_average_pooling2d_1   [null,1024]
-</pre>
-
-<img width="30%" title="heat map" src="./Heat map demo_files/heat.jpg">
-<img width="33%" title="heat_nearest map" src="./Heat map demo_files/heat_nearest.jpg">
-
-<br>Therefore, if we cut off the GAP layer, we will get localization of activations
- in the "daisy" channel on the 7�7 space grid. You can see above activations
- in bilinear interpolated and nearest modes. See also
-<a href="https://www.ibiblio.org/e-notes/ml/webgl/heat_daisy.htm">"Daisy" Class Activation Mapping</a>.
-
-<hr><a href="https://www.ibiblio.org/e-notes/ml/notes.htm">TFjs notes</a>
-&nbsp; &nbsp; <i>updated</i> 11 Jan 2020 -->
-
 
 <iframe frameborder="0" scrolling="no" style="background-color: transparent; border: 0px; display: none;" src="./Heat map demo_files/saved_resource.html">
 </iframe>
