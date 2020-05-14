@@ -31,7 +31,7 @@
       }
 
       .container .row .col-4 .col-12 > canvas {
-        border-radius: 0px 25px 26px 29px;
+        border-radius: 0px 26px 26px 26px;
       }
 
       #outcnv{
@@ -42,7 +42,7 @@
       .slider {
         -webkit-appearance: none;
         width: 224px;
-        height: 15px;
+        height: 5px;
         border-radius: 5px;
         background: #d3d3d3;
         outline: none;
@@ -61,7 +61,7 @@
         width: 25px;
         height: 25px;
         border-radius: 50%;
-        background: rgb(101, 170, 103);
+        background: rgb(255, 111, 111);
         cursor: pointer;
       }
 
@@ -69,15 +69,17 @@
         width: 25px;
         height: 25px;
         border-radius: 50%;
-        background: #4CAF50;
+        background: rgb(255, 111, 111);
         cursor: pointer;
       }
 
       #toggle_btns{
-
         width: 224px;
       }
-
+      .btn:focus,
+.btn:active {
+  box-shadow: none;
+}
     </style>
   </head>
 <body data-gr-c-s-loaded="true">
@@ -106,14 +108,14 @@
       <br>
 
       <div class="col-12" id="output">
-        probability / class / name 
+        I think it is a: 
       </div>
       <div class="col-12">
         <br>
         <div class="btn-group-toggle btn-group-vertical btn-block" 
              data-toggle="buttons"
              id = "toggle_btns"
-             onchange="change_label_Selcetion();">
+             onchange="classify();">
           <label class="btn btn-outline-secondary active" name = "labels">
             <input type="radio" name="options" id="option1" checked >
             <div name="prediction_labels">prediction 1</div>

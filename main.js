@@ -35,19 +35,13 @@ rect_cnv.addEventListener('mousedown', start_drag, false);
 window.addEventListener('mouseup', stop_drag, false);
 window.addEventListener("paste", pasteHandler);
 
-// fitToContainer(rect_cnv);
-// fitToContainer(cnv);
-// function fitToContainer(canvas){
-//   canvas.style.width='100%';
-//   canvas.style.height='100%';
-//   canvas.width  = canvas.offsetWidth;
-//   canvas.height = canvas.offsetHeight;
-// }
+$(".btn").mousemove(function(element) {
+  $(this).removeClass("focus");
+});
 
-// function fitToImage(canvas,img_width, img_height){
-//   canvas.width = img_width;
-//   canvas.height = img_height;
-// }
+// $(".btn").mouseup(function(){
+//   $(this).blur();
+// })
 
 for (let value of Object.values(IMAGENET_CLASSES)) {
   let option = document.createElement('option');
@@ -56,13 +50,12 @@ for (let value of Object.values(IMAGENET_CLASSES)) {
   select.appendChild(option);
 }
 
-function change_label_Selcetion(){
+function check_radio_Index(){
   for (let i=0; i < radio_btns.length; i ++){
     if (radio_btns[i].checked){
-      makeModel(radio_btns[i].value);
+      return i;
     }
   }
-  classify();
 }
 
 //paste handler
@@ -130,17 +123,19 @@ function stop_drag(ev){
   rect();
   ev.preventDefault();
 }
+
 async function rect(){
   out_ctx.fillStyle = "white";
   out_ctx.fillRect(0,0, IMAGE_SIZE, IMAGE_SIZE);
   out_ctx.drawImage(img, xMin/scale, yMin/scale,
      (xMax - xMin)/scale, (yMax - yMin)/scale, 0,0, IMAGE_SIZE, IMAGE_SIZE);
-  let ti = performance.now()
+  let ti = performance.now();
   await classify();
   console.log(Math.floor(xMin/scale) +","+ Math.floor(yMin/scale) +
     " : " + Math.floor((xMax-xMin)/scale) +"," + Math.floor((yMax-yMin)/scale) +
     " / " + Math.round(performance.now() - ti) + " ms");
 }
+
 function getXY(ev){
   var rect = cnv.getBoundingClientRect()
   return [ev.clientX - rect.left, ev.clientY - rect.top]
@@ -161,7 +156,7 @@ async function loadLayersModel(modelUrl) {
   const layerPred = await mobilenet.getLayer('conv_preds');
 //  const weight985 = layerPred.getWeights()[0].slice([0,0,0,985],[1,1,-1,1]);
   weightsPred = layerPred.getWeights()[0];
-  makeModel(index);
+  // makeModel(index);
 }
 async function makeModel(ind) {
   if(modelReady) model.dispose();
@@ -175,7 +170,7 @@ async function makeModel(ind) {
       })
     ]
   });
-//  await classify();
+  // await classify();
 }
 async function classify() {
   const batched = tf.tidy( () => {
@@ -186,7 +181,7 @@ async function classify() {
   const softmax = mobilenet.predict(batched);
   const predictions = await getTopKClassesKeras(softmax, topK);
   
-  let str = "probability / class / name";
+  let str = "I think it is a:";
   // for(let i=0; i<topK; i++)
   //   str += "\n" + predictions[i].probability.toFixed(3) + " - " + predictions[i].classInd +
   //     " - " + predictions[i].className;
@@ -199,8 +194,11 @@ async function classify() {
   }
 
   // document.getElementById('user_input').innerText = predictions[0].className;
+  let radio_btn_ind = check_radio_Index();
+  makeModel(predictions[radio_btn_ind].classInd);
 
   const basePredict = baseModel.predict(batched);
+  console.log(basePredict);
   const predicted = model.predict(basePredict);
   // const data = predicted.dataSync();
   act_data = predicted.dataSync();
