@@ -18,7 +18,7 @@ const out_ctx3 = out_cnv3.getContext('2d')
 
 const radio_btns = document.getElementsByName('options');
 const radio_btn_labels = document.getElementsByName('prediction_labels');
-let select = document.getElementById('dropdown_labels');
+// let select = document.getElementById('dropdown_labels');
 
 var scale,  isMouseDown = false,  iter = 200,
     xMin, yMin, xMax, yMax
@@ -43,12 +43,12 @@ $(".btn").mousemove(function(element) {
 //   $(this).blur();
 // })
 
-for (let value of Object.values(IMAGENET_CLASSES)) {
-  let option = document.createElement('option');
-  // console.log(option);
-  option.text = value;
-  select.appendChild(option);
-}
+// for (let value of Object.values(IMAGENET_CLASSES)) {
+//   let option = document.createElement('option');
+//   // console.log(option);
+//   option.text = value;
+//   select.appendChild(option);
+// }
 
 function check_radio_Index(){
   for (let i=0; i < radio_btns.length; i ++){
