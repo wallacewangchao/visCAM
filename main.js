@@ -234,7 +234,8 @@ async function classify() {
   // out_ctx2.drawImage(imageBitmap, 0,0, 224,224);
 
   // new visualisation with reddots
-  drawDots();
+  // drawDots();
+  drawSquare();
 }
 
 function drawDots(){
@@ -254,6 +255,23 @@ function drawDots(){
   console.log("set_act_max: " + set_act_max);
 }
 
+function drawSquare() {
+  let k = 0;
+  out_ctx3.clearRect(0,0, 224,224);
+  for(let i=0; i < 7; i++){
+    for (let j=0; j < 7; j++, k++){
+      out_ctx3.beginPath();
+      out_ctx3.rect([j]*32, [i]*32, 32, 32);
+      // let alpha = Math.max((1 - Math.exp(0.095*(act_data[k] - set_act_max))), 0);
+      let alpha = Math.max((1 - Math.exp(0.035*(-act_data[k] + set_act_max))), 0);
+      out_ctx3.fillStyle = 'rgba(255, 0, 0  ,' + alpha + ')';
+      // out_ctx3.fillStyle = 'rgba(82, 97, 110  ,' + alpha + ')';
+      out_ctx3.fill();
+    }
+  }
+  console.log("set_act_max: " + set_act_max);
+
+}
 
 const init = async () => {
   await loadLayersModel('https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_1.0_224/model.json');

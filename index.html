@@ -36,7 +36,7 @@
 
       #outcnv{
         box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.15);
-        border:1px solid rgb(202, 202, 202);
+        /* border:1px solid rgb(202, 202, 202); */
       }
 
       .slider {
@@ -76,10 +76,7 @@
       #toggle_btns{
         width: 224px;
       }
-      .btn:focus,
-.btn:active {
-  box-shadow: none;
-}
+
     </style>
   </head>
 <body data-gr-c-s-loaded="true">
@@ -102,7 +99,7 @@
       </div>
       <div class="col-12">
         <br>
-        <input type="range" id="slider_actMax" class="slider" min="0" max="50" value="34"  width="224" oninput="set_act_max=parseFloat(this.value); drawDots();">
+        <input type="range" id="slider_actMax" class="slider" min="0" max="50" value="34"  width="224" oninput="set_act_max=parseFloat(this.value); drawSquare();">
         <br>
 
       </div>
