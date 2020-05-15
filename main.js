@@ -275,7 +275,7 @@ function drawSquare() {
 
 const init = async () => {
   await loadLayersModel('https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_1.0_224/model.json');
-  paste_createImage('img/teapot.jpg');
+  paste_createImage('img/Teekanne.jpg');
 //  paste_createImage('fig/drawing.jpg');
 }
 init();
